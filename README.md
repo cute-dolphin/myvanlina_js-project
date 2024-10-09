@@ -14,7 +14,7 @@ Please run `./util/setup.sh` in your terminal before you begin. This will set up
 
 In this assignment you are working on the frontend.
 
-Your task is to build a frontend for a UNSW rip-off version of the popular forum [EdStem](https://edstem.com/). You will of course be familiar with this application - it is the forum we use for this course!
+Your task is to build a frontend for a UNSW rip-off version of the popular forum [EdStem](https://edstem.org). You will of course be familiar with this application - it is the forum we use for this course!
 
 UNSW's rip-off of Qanda is called "Qanda". However, you don't have to build the entire application. You only have to build the frontend. The backend is already built for you as an express server built in NodeJS (see spec).
 
