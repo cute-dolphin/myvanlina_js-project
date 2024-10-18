@@ -15,15 +15,22 @@ const createLine=(content,id,type)=>{
     return div1;
 }
 
-const createButton=(content,id,type)=>{
+const createButton=(content,id,callback)=>{
     const button=document.createElement("button");
     button.innerText=content;
     button.setAttribute("id",id);
-    button.setAttribute("type",type);
+    button.setAttribute("type","button");
+    button.addEventListener("click",callback);
     return button;
 }
+
+const submitLogin=()=>{
+    console.log("success login");
+}
+
+
 const main=document.getElementById("main");
 main.appendChild(createLine("Email: ","input-email","email"));
 main.appendChild(createLine("Password: ","input-password","password"));
-main.appendChild(createButton("Submit: ","submit-button","button"));
+main.appendChild(createButton("Submit: ","submit-button",submitLogin));
 
