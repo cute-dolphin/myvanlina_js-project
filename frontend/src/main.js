@@ -3,6 +3,7 @@ import { BACKEND_PORT } from './config.js';
 import { fileToDataUrl } from './helpers.js';
 
 //functinon parts
+//create a line, include label and input
 const createLine=(content,id,type)=>{
     const div1=document.createElement("div");
     const label=document.createElement("label");
@@ -15,6 +16,7 @@ const createLine=(content,id,type)=>{
     return div1;
 }
 
+//create a button, and add relative eventlisener
 const createButton=(content,id,callback)=>{
     const button=document.createElement("button");
     button.innerText=content;
@@ -24,13 +26,32 @@ const createButton=(content,id,callback)=>{
     return button;
 }
 
+//the login-submit button's react function
 const submitLogin=()=>{
     console.log("success login");
+    removeElement("loginForm")
 }
 
+//remove element by id 
+const removeElement=(id)=>{
+    const ele=document.getElementById(id);
+    if(ele){
+        ele.remove();
+        console.log("success remove:"+id);
+    }
+}
+
+//create a form page
+const createLoginForm=()=>{
+    const loginForm=document.createElement("form");
+    loginForm.setAttribute("id","loginForm");
+    loginForm.appendChild(createLine("Email: ","input-email","email"));
+    loginForm.appendChild(createLine("Password: ","input-password","password"));
+    loginForm.appendChild(createButton("Submit: ","submit-button",submitLogin));
+    loginForm.appendChild(createButton("Regist: ","regist-button",submitLogin));
+    return loginForm;
+}
 
 const main=document.getElementById("main");
-main.appendChild(createLine("Email: ","input-email","email"));
-main.appendChild(createLine("Password: ","input-password","password"));
-main.appendChild(createButton("Submit: ","submit-button",submitLogin));
+main.appendChild(createLoginForm());
 
