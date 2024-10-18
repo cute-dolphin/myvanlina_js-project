@@ -3,6 +3,7 @@ import { BACKEND_PORT } from './config.js';
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
 import {regist} from './dataProvider.js'
+import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
 //create a line, include label and input
@@ -46,6 +47,8 @@ const submitLogin=()=>{
     .then(({token,userId})=>{
         console.log('success collect token:'+token);
         console.log('success collect userid:'+userId);
+        localStorage.setItem(AUTH.TOKEN_KEY,token);
+        localStorage.setItem(AUTH.USER_ID_key,userId);
         removeElement("loginForm");
     })
     .catch((error)=>{
@@ -97,6 +100,8 @@ const submitRegist=()=>{
         .then(({token,userId})=>{
         console.log('success collect token:'+token);
         console.log('success collect userid:'+userId);
+        localStorage.setItem(AUTH.TOKEN_KEY,token);
+        localStorage.setItem(AUTH.USER_ID_key,userId);
         console.log("regist complete.");
         removeElement("registForm");
         })
@@ -107,6 +112,14 @@ const submitRegist=()=>{
     }
 }
 
-const main=document.getElementById("main");
-main.appendChild(createLoginForm());
+//------main thread------
+const hash = window.location.hash;
+const userId=localStorage.getItem(AUTH.USER_ID_key);
+const token = localStorage.getItem(AUTH.TOKEN_KEY);
+if(hash==""||!userId||!token){
+    localStorage.clear();
+    const main=document.getElementById("main");
+    main.appendChild(createLoginForm());
+}
+
 
