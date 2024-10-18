@@ -1,7 +1,7 @@
 import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
-
+import {login} from './dataProvider.js'
 //functinon parts
 //create a line, include label and input
 const createLine=(content,id,type)=>{
@@ -29,6 +29,13 @@ const createButton=(content,id,callback)=>{
 //the login-submit button's react function
 const submitLogin=()=>{
     console.log("success login");
+    const emailInput=document.getElementById("input-email").value;
+    const passwordInput=document.getElementById("input-password").value;
+    login(emailInput,passwordInput)
+    .then(({token,userId})=>{
+        console.log('success collect token:'+token);
+        console.log('success collect userid:'+userId);
+    })
     removeElement("loginForm")
 }
 
@@ -41,7 +48,7 @@ const removeElement=(id)=>{
     }
 }
 
-//create a form page
+//create a login form page
 const createLoginForm=()=>{
     const loginForm=document.createElement("form");
     loginForm.setAttribute("id","loginForm");
