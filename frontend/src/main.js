@@ -2,6 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
+import {regist} from './dataProvider.js'
 //functinon parts
 //------------login------------
 //create a line, include label and input
@@ -84,6 +85,18 @@ const submitRegist=()=>{
     const emailREG=document.getElementById("reg-email").value;
     const nameREG=document.getElementById("reg-name").value;
     const passwordREG=document.getElementById("reg-password").value;
+    const confirmPassword=document.getElementById("confirm-password").value;
+    if(confirmPassword!==passwordREG){
+        window.alert("confirm-password is not same with the password!");
+    }else{
+        regist(emailREG,passwordREG,nameREG)
+        .then(({token,userId})=>{
+        console.log('success collect token:'+token);
+        console.log('success collect userid:'+userId);
+        console.log("regist complete.");
+        removeElement("registForm");
+        })
+    }
 }
 
 const main=document.getElementById("main");
