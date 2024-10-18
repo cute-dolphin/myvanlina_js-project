@@ -48,6 +48,10 @@ const submitLogin=()=>{
         console.log('success collect userid:'+userId);
         removeElement("loginForm");
     })
+    .catch((error)=>{
+        console.error(error);
+        window.alert(error);
+    })
 }
 
 //create a login form page
@@ -95,6 +99,10 @@ const submitRegist=()=>{
         console.log('success collect userid:'+userId);
         console.log("regist complete.");
         removeElement("registForm");
+        })
+        .catch((error)=>{
+            console.error(error);
+            window.alert(error);
         })
     }
 }
