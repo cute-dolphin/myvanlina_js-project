@@ -50,6 +50,8 @@ const submitLogin=()=>{
         localStorage.setItem(AUTH.TOKEN_KEY,token);
         localStorage.setItem(AUTH.USER_ID_key,userId);
         removeElement("loginForm");
+        const header = document.getElementById("header");
+        header.appendChild(createLogout());
     })
     .catch((error)=>{
         console.error(error);
@@ -79,7 +81,7 @@ const createRegistForm=()=>{
     registForm.appendChild(createButton("Submit: ","regsubmit-button",submitRegist));
     return registForm;
 }
-//click regist button   1.remove login form 2.create new registion form
+//click regist button in login page   1.remove login form 2.create new registion form
 const registLogin=()=>{
     console.log("regist start");
     removeElement("loginForm");
@@ -104,12 +106,32 @@ const submitRegist=()=>{
         localStorage.setItem(AUTH.USER_ID_key,userId);
         console.log("regist complete.");
         removeElement("registForm");
+        const header = document.getElementById("header");
+        header.appendChild(createLogout());
         })
         .catch((error)=>{
             console.error(error);
             window.alert(error);
         })
     }
+}
+
+//logout callback----1.remove logout in header 2.remove tokens--localstorage.clear() 3.back to login page--createlogin
+const logoutCallback=()=>{
+    console.log("this is logout callback function");
+    removeElement("headerButtons");
+    localStorage.clear();
+    const main=document.getElementById("main");
+    main.appendChild(createLoginForm());
+    console.log("success back to login form");
+}
+//after login or register, should in dashboard, create dashboard
+const createLogout=()=>{
+    const headerButtons=document.createElement("div");
+    headerButtons.setAttribute("id","headerButtons");
+    const logout=createButton("Logout","logout",logoutCallback);
+    headerButtons.appendChild(logout);
+    return headerButtons;
 }
 
 //------main thread------
