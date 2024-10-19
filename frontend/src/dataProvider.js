@@ -1,4 +1,7 @@
-
+const AUTH={
+    TOKEN_KEY:"token",
+    USER_ID_key:"userId",
+};
 
 const errorThrow=(res)=>{
     const {error}= res;
@@ -41,3 +44,20 @@ export const regist=(email,password,name)=>{
 }
 
 //-----createThread-----
+export const createThread=(title,isPublic,content)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/thread',{
+        method:"POST",
+        body:JSON.stringify({
+            title,
+            isPublic,
+            content,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}

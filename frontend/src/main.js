@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist} from './dataProvider.js'
+import {regist,createThread} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -137,7 +137,7 @@ const createDashboard=()=>{
     return headerButtons;
 }
 
-//2.2.2 createthreadCallback
+//2.2.1.1 createthreadCallback
 const createthreadCallback=()=>{
     console.log("let's move to create-new-Thread page!");
     const header=document.getElementById("header");
@@ -147,7 +147,7 @@ const createthreadCallback=()=>{
     
 }
 
-//2.2.2.1 create thread page
+//2.2.1.2 create thread page
 const createThreadPage=()=>{
     const createthreadpage=document.createElement("form");
     createthreadpage.setAttribute("id","create-thread-form");
@@ -164,12 +164,20 @@ const createThreadPage=()=>{
     return createthreadpage;
 }
 
-//2.2.3
+//2.2.1.3
 const submitCreateNewThreadCallback=()=>{
     console.log("create a new thread.");
+    const title=document.getElementById("new-thread-title").value;
+    const isPublic=document.getElementById("new-thread-public").checked;
+    const content=document.getElementById("new-thread-content").value;
+    createThread(title,isPublic,content)
+    .then((res)=>{
+        console.log(res);
+        console.log("success send data and get respone");
+    })
 }
 
-//-----2.2-----
+//-----2.2.1-----
 //------createThread------
 //1.add a createThread button on dashboard 
 //2.after press this button, remove current page and build create thread page
