@@ -124,6 +124,7 @@ const submitRegist=()=>{
 const logoutCallback=()=>{
     console.log("this is logout callback function");
     removeElement("headerButtons");
+    removeElement("showThreads");
     localStorage.clear();
     const main=document.getElementById("main");
     main.appendChild(createLoginForm());
@@ -193,6 +194,7 @@ const submitCreateNewThreadCallback=()=>{
 //2.2.2
 //1. create a new page,use api get data
 //2. show data in page
+//3. add a more button
 //2.2.2.1
 let start=0;
 const showAllThreads=()=>{
