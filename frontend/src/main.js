@@ -140,11 +140,11 @@ const createDashboard=()=>{
 //2.2.1.1 createthreadCallback
 const createthreadCallback=()=>{
     console.log("let's move to create-new-Thread page!");
-    const header=document.getElementById("header");
-    removeElement("header");
+    const header = document.getElementById("header");
+    header.style.display = "none";
     const main=document.getElementById("main");
     main.appendChild(createThreadPage());
-    
+    window.history.pushState({ page: "createThread" }, "Create Thread", "/create-thread");
 }
 
 //2.2.1.2 create thread page
@@ -174,6 +174,9 @@ const submitCreateNewThreadCallback=()=>{
     .then((res)=>{
         console.log(res);
         console.log("success send data and get respone");
+        removeElement("create-thread-form");
+        const header=document.getElementById("header");
+        header.style.display = "block";
     })
 }
 
