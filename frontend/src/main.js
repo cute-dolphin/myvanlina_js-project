@@ -205,10 +205,32 @@ const showAllThreads=()=>{
             getThreadDetail(id)
             .then((threadDetail)=>{
                 console.log(threadDetail);
+                showThreads.appendChild(showThreadsDetails(threadDetail));
             })
         });
     })
     return showThreads;
+}
+
+//2.2.2.2 show threads details
+const showThreadsDetails=(thread)=>{
+    const singleThreads = document.createElement("ol");
+    const singleThreadsAuthor = document.createElement("li");
+    const singleThreadsLikes = document.createElement("li");
+    const singleThreadsDate = document.createElement("li");
+    const singleThreadsTitle = document.createElement("li");
+
+    singleThreadsAuthor.innerText=thread.creatorId;
+    singleThreadsLikes.innerText=thread.likes.length;
+    singleThreadsDate.innerText=thread.createdAt;
+    singleThreadsTitle.innerText=thread.title;
+
+    singleThreads.appendChild(singleThreadsTitle);
+    singleThreads.appendChild(singleThreadsDate);
+    singleThreads.appendChild(singleThreadsAuthor);
+    singleThreads.appendChild(singleThreadsLikes);
+    return singleThreads;
+
 }
 
 //------main thread------
