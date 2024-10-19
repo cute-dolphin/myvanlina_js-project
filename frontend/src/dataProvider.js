@@ -61,3 +61,31 @@ export const createThread=(title,isPublic,content)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//-----getALLthreads-----
+export const getThreads=(startIndex)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch(`http://localhost:5005/threads?start=${startIndex}`,{
+        method:"GET",
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
+
+//-----get Threads detail information-----
+export const getThreadDetail=(threadId)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch(`http://localhost:5005/thread?id=${threadId}`,{
+        method:"GET",
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}

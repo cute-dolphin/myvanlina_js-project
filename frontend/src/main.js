@@ -137,6 +137,12 @@ const createDashboard=()=>{
     return headerButtons;
 }
 
+//-----2.2.1-----
+//------createThread------
+//1.add a createThread button on dashboard 
+//2.after press this button, remove current page and build create thread page
+//3.press the submit button in create thread page, send data to server, receive respones
+//2.2.1 add a button on createDashboard()
 //2.2.1.1 createthreadCallback
 const createthreadCallback=()=>{
     console.log("let's move to create-new-Thread page!");
@@ -180,12 +186,7 @@ const submitCreateNewThreadCallback=()=>{
     })
 }
 
-//-----2.2.1-----
-//------createThread------
-//1.add a createThread button on dashboard 
-//2.after press this button, remove current page and build create thread page
-//3.press the submit button in create thread page, send data to server, receive respones
-//2.2.1 add a button on createDashboard()
+
 
 
 //------main thread------
