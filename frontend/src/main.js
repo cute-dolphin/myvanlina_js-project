@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -52,6 +52,8 @@ const submitLogin=()=>{
         removeElement("loginForm");
         const header = document.getElementById("header");
         header.appendChild(createDashboard());
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
     })
     .catch((error)=>{
         console.error(error);
@@ -108,6 +110,8 @@ const submitRegist=()=>{
         removeElement("registForm");
         const header = document.getElementById("header");
         header.appendChild(createDashboard());
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
         })
         .catch((error)=>{
             console.error(error);
@@ -186,8 +190,26 @@ const submitCreateNewThreadCallback=()=>{
     })
 }
 
-
-
+//2.2.2
+//1. create a new page,use api get data
+//2. show data in page
+//2.2.2.1
+let start=0;
+const showAllThreads=()=>{
+    const showThreads=document.createElement("div");
+    showThreads.setAttribute("id","showThreads");
+    getThreads(start)
+    .then((threads)=>{
+        console.log(threads);
+        threads.forEach(id => {
+            getThreadDetail(id)
+            .then((threadDetail)=>{
+                console.log(threadDetail);
+            })
+        });
+    })
+    return showThreads;
+}
 
 //------main thread------
 const hash = window.location.hash;
