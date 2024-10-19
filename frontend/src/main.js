@@ -51,7 +51,7 @@ const submitLogin=()=>{
         localStorage.setItem(AUTH.USER_ID_key,userId);
         removeElement("loginForm");
         const header = document.getElementById("header");
-        header.appendChild(createLogout());
+        header.appendChild(createDashboard());
     })
     .catch((error)=>{
         console.error(error);
@@ -107,7 +107,7 @@ const submitRegist=()=>{
         console.log("regist complete.");
         removeElement("registForm");
         const header = document.getElementById("header");
-        header.appendChild(createLogout());
+        header.appendChild(createDashboard());
         })
         .catch((error)=>{
             console.error(error);
@@ -125,14 +125,57 @@ const logoutCallback=()=>{
     main.appendChild(createLoginForm());
     console.log("success back to login form");
 }
+
 //after login or register, should in dashboard, create dashboard
-const createLogout=()=>{
+const createDashboard=()=>{
     const headerButtons=document.createElement("div");
     headerButtons.setAttribute("id","headerButtons");
     const logout=createButton("Logout","logout",logoutCallback);
+    const createthread=createButton("Create-thread","createthread",createthreadCallback);
     headerButtons.appendChild(logout);
+    headerButtons.appendChild(createthread);
     return headerButtons;
 }
+
+//2.2.2 createthreadCallback
+const createthreadCallback=()=>{
+    console.log("let's move to create-new-Thread page!");
+    const header=document.getElementById("header");
+    removeElement("header");
+    const main=document.getElementById("main");
+    main.appendChild(createThreadPage());
+    
+}
+
+//2.2.2.1 create thread page
+const createThreadPage=()=>{
+    const createthreadpage=document.createElement("form");
+    createthreadpage.setAttribute("id","create-thread-form");
+    createthreadpage.className='create-thread-form';
+    const title=createLine("Title","new-thread-title","text");
+    const isPublic=createLine("Is public ","new-thread-public","checkbox");
+    const content=createLine("Content ","new-thread-content","text");
+    const submitButton=createButton("Create","submit-create-newthread",submitCreateNewThreadCallback);
+    createthreadpage.appendChild(title);
+    createthreadpage.appendChild(isPublic);
+    createthreadpage.appendChild(content);
+    createthreadpage.appendChild(submitButton);
+    console.log("create new thread page complete!");
+    return createthreadpage;
+}
+
+//2.2.3
+const submitCreateNewThreadCallback=()=>{
+    console.log("create a new thread.");
+}
+
+//-----2.2-----
+//------createThread------
+//1.add a createThread button on dashboard 
+//2.after press this button, remove current page and build create thread page
+//3.press the submit button in create thread page, send data to server, receive respones
+//2.2.1 add a button on createDashboard()
+
 
 //------main thread------
 const hash = window.location.hash;

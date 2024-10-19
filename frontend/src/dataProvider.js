@@ -1,3 +1,5 @@
+
+
 const errorThrow=(res)=>{
     const {error}= res;
     if(error){
@@ -37,3 +39,5 @@ export const regist=(email,password,name)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//-----createThread-----

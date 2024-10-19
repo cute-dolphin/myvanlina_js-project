@@ -5,3 +5,7 @@ html, body {
     height: 100%;
     font-family: Arial;
 }
+
+.create-thread-form{
+    margin: 20px;
+}
