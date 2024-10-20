@@ -231,9 +231,44 @@ const showThreadsDetails=(thread)=>{
     singleThreads.appendChild(singleThreadsDate);
     singleThreads.appendChild(singleThreadsAuthor);
     singleThreads.appendChild(singleThreadsLikes);
+    //2.2.3 set attribute to store the thread's id
+    singleThreads.setAttribute("singleThread-id",thread.id);
+    //add event listener, click singleThreads, create page
+    singleThreads.onclick=()=>{
+        const singleThreadid=singleThreads.getAttribute("singleThread-id");
+        console.log(singleThreadid);
+        const main=document.getElementById("main");
+        main.appendChild(showSingleThreads(singleThreadid));
+    }
     return singleThreads;
-
 }
+
+//-----2.2.3 single thread details-----
+//basic thought:each singleThreads(order list) add a eventlistener, callback is create a new single threads detail page on the right
+//callback of crerate page of single threads details
+const showSingleThreads=(id)=>{
+    removeElement("singleThreadsDetails");
+    const page = document.createElement("div");
+    page.setAttribute("id","singleThreadsDetails");
+    getThreadDetail(id)
+    .then((detail)=>{
+        const singleDetail = document.createElement("ul");
+        const singleThreadsLikes = document.createElement("li");
+        const singleThreadsContent = document.createElement("li");
+        const singleThreadsTitle = document.createElement("li");
+
+        singleThreadsLikes.innerText=detail.likes.length;
+        singleThreadsContent.innerText=detail.content;
+        singleThreadsTitle.innerText=detail.title;
+
+        singleDetail.appendChild(singleThreadsTitle);
+        singleDetail.appendChild(singleThreadsContent);
+        singleDetail.appendChild(singleThreadsLikes);
+        page.appendChild(singleDetail);
+    })
+    return page;
+}
+
 
 //------main thread------
 const hash = window.location.hash;
