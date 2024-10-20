@@ -9,3 +9,6 @@ html, body {
 .create-thread-form{
     margin: 20px;
 }
+#main{
+    display: flex;
+}
