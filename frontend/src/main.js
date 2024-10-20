@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -282,6 +282,12 @@ const showSingleThreads=(id)=>{
     page.appendChild(editButton);
     getThreadDetail(id)
     .then((detail)=>{
+        //2.3.1.4 only author could modify threads
+        const ThreadAuthor=detail.creatorId;
+        const currentUser=localStorage.getItem(AUTH.USER_ID_key);
+        if(String(ThreadAuthor) !== String(currentUser)){
+            editButton.style.display="none";
+        }
         const singleDetail = document.createElement("ul");
         const singleThreadsLikes = document.createElement("li");
         const singleThreadsContent = document.createElement("li");
@@ -295,6 +301,7 @@ const showSingleThreads=(id)=>{
         singleDetail.appendChild(singleThreadsContent);
         singleDetail.appendChild(singleThreadsLikes);
         page.appendChild(singleDetail);
+        
     })
     return page;
 }
@@ -332,7 +339,19 @@ const createEditPage=(id)=>{
 //2.3.1.3 a submit button,the button should using API to fetch server.
 const editThreadSubmit=(detail)=>{
     console.log("this is edit save button")
-
+    const editThreadTitle=document.getElementById("editThreadTitle").value;
+    const editThreadContent=document.getElementById("editThreadContent").value;
+    const editThreadIsPbulic=document.getElementById("editThreadIsPbulic").checked;
+    const editThreadLock=document.getElementById("editThreadLock").checked;
+    editThread(detail.id,editThreadTitle,editThreadIsPbulic,editThreadLock,editThreadContent)
+    .then((res)=>{
+        console.log("submit successful");
+        //save complete, remove current page
+        removeElement("edit-thread-page");
+        //back to (create) thread page
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
+    })
 }
 
 //2.3.1 Editing a thread

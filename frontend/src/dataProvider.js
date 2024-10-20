@@ -89,3 +89,23 @@ export const getThreadDetail=(threadId)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+//-----edit threads -----
+export const editThread=(id,title,isPublic,lock,content)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/thread',{
+        method:"PUT",
+        body:JSON.stringify({
+            id,
+            title,
+            isPublic,
+            lock,
+            content,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
