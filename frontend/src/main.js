@@ -292,6 +292,15 @@ const showSingleThreads=(id)=>{
             editButton.style.display="none";
             deleteButton.style.display="none";
         }
+        //2.3.3 like threads---1.make sure threads are not locked
+        if(!detail.lock){
+            const hasliked=detail.likes.includes(parseInt(currentUser));
+            console.log(hasliked);
+            //make sure the content of button
+            const likeButtonInnertext=hasliked?"not like":"like";
+            const likeButton=createButton(likeButtonInnertext,"like-thread-button",()=>likeThreadCallback(id));
+            page.appendChild(likeButton);
+        }
         const singleDetail = document.createElement("ul");
         const singleThreadsLikes = document.createElement("li");
         const singleThreadsContent = document.createElement("li");
@@ -377,6 +386,23 @@ const deleteThreadCallback=(id)=>{
         const main=document.getElementById("main");
         main.appendChild(showAllThreads());
     })
+}
+
+//2.3.3 like button
+//button innertext should different(like/don't like) according to current user records
+//1.check the thread locked or not
+//2.if not locked, collect record from details--to make sure user liked or not
+//3.create button
+//4.write callback function--using API
+const likeThreadCallback=(id)=>{
+    console.log("this is like button");
+    const content=document.getElementById("like-thread-button").content;
+    //already like, click button means like before, not like threads now
+    if(content==="not like"){
+        const turnon=true;
+    }else{
+        const turnon=false;
+    }
 }
 
 //format function----format-date  
