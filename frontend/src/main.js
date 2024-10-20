@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -396,13 +396,24 @@ const deleteThreadCallback=(id)=>{
 //4.write callback function--using API
 const likeThreadCallback=(id)=>{
     console.log("this is like button");
-    const content=document.getElementById("like-thread-button").content;
+    let content=document.getElementById("like-thread-button").innerText;
+    let turnon;
     //already like, click button means like before, not like threads now
     if(content==="not like"){
-        const turnon=true;
+        turnon=false;
     }else{
-        const turnon=false;
+        turnon=true;
     }
+    likeThread(id,turnon)
+    .then((res)=>{
+        console.log("like button success");
+        //fresh page
+        removeElement("singleThreadsDetails");
+        removeElement("showThreads");
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
+        main.appendChild(showSingleThreads(id));
+    })
 }
 
 //format function----format-date  
