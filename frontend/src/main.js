@@ -308,7 +308,7 @@ const editThreadCallback=(id)=>{
     main.appendChild(createEditPage(id));
 }
 
-//2.3.1.3 createEditPage
+//2.3.1.2 createEditPage
 const createEditPage=(id)=>{
     console.log("this is current single threads id:"+id);
     const page=document.createElement("div");
@@ -318,12 +318,23 @@ const createEditPage=(id)=>{
         const editThreadTitle=createLine("Title","editThreadTitle","text",detail.title);
         const editThreadContent=createLine("Content","editThreadContent","text",detail.content);
         const editThreadIsPbulic=createLine("IsPbulic","editThreadIsPbulic","checkbox",detail.isPublic);
+        const editThreadLock=createLine("Lock","editThreadLock","checkbox",detail.lock);
+        const editSaveButton=createButton("Save","editThread-save-button",()=>editThreadSubmit(detail));
         page.appendChild(editThreadTitle);
         page.appendChild(editThreadContent);
         page.appendChild(editThreadIsPbulic);
+        page.appendChild(editThreadLock);
+        page.appendChild(editSaveButton);
     })
     return page;
 }
+
+//2.3.1.3 a submit button,the button should using API to fetch server.
+const editThreadSubmit=(detail)=>{
+    console.log("this is edit save button")
+
+}
+
 //2.3.1 Editing a thread
 //1. add a 'edit' button on single thread page
 //2. the callback function of Edit button
