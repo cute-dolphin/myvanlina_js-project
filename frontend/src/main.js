@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -196,7 +196,7 @@ const submitCreateNewThreadCallback=()=>{
     })
 }
 
-//2.2.2
+//2.2.2-----show All Threads list
 //1. create a new page,use api get data
 //2. show data in page
 //3. add a more button
@@ -280,6 +280,9 @@ const showSingleThreads=(id)=>{
     //2.3.1 add a button in single thread page
     const editButton=createButton("Edit","edit-thread-button",()=>editThreadCallback(id));
     page.appendChild(editButton);
+    //2.3.2 add delete button in individual Thread page
+    const deleteButton=createButton("Delete","delete-thread-button",()=>deleteThreadCallback(id));
+    page.appendChild(deleteButton);
     getThreadDetail(id)
     .then((detail)=>{
         //2.3.1.4 only author could modify threads
@@ -287,6 +290,7 @@ const showSingleThreads=(id)=>{
         const currentUser=localStorage.getItem(AUTH.USER_ID_key);
         if(String(ThreadAuthor) !== String(currentUser)){
             editButton.style.display="none";
+            deleteButton.style.display="none";
         }
         const singleDetail = document.createElement("ul");
         const singleThreadsLikes = document.createElement("li");
@@ -306,6 +310,11 @@ const showSingleThreads=(id)=>{
     return page;
 }
 
+//2.3.1 Editing a thread
+//1. add a 'edit' button on single thread page
+//2. the callback function of Edit button
+//(create a new edit page,input field for title, content,  whether or not the thread is private, and whether or not a thread is locked. )
+//3. in edit thread page, a submit button,the button should using API to fetch server. 
 //2.3.1.2 editThreadCallback 1.remove two parts 2.create a new edit page
 const editThreadCallback=(id)=>{
     console.log(id);
@@ -354,11 +363,21 @@ const editThreadSubmit=(detail)=>{
     })
 }
 
-//2.3.1 Editing a thread
-//1. add a 'edit' button on single thread page
-//2. the callback function of Edit button
-//(create a new edit page,input field for title, content,  whether or not the thread is private, and whether or not a thread is locked. )
-//3. in edit thread page, a submit button,the button should using API to fetch server. 
+//2.3.2 delete threads(only by author)
+//1. like edit, add a button, only could view by author
+//2. add callback function on delete button, use API
+const deleteThreadCallback=(id)=>{
+    console.log("this is delete single thread button");
+    deleteThread(id)
+    .then((res)=>{
+        console.log("successful delete thread");
+        //after success delete the threads,remove current page and direct(create) new page
+        removeElement("singleThreadsDetails");
+        removeElement("showThreads");
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
+    })
+}
 
 //format function----format-date  
 const formatDate=(datestr)=>{

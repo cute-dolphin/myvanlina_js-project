@@ -109,3 +109,20 @@ export const editThread=(id,title,isPublic,lock,content)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//delete threads 
+export const deleteThread=(id)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/thread',{
+        method:"DELETE",
+        body:JSON.stringify({
+            id,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
