@@ -7,13 +7,18 @@ import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
 //create a line, include label and input
-const createLine=(content,id,type)=>{
+const createLine=(content,id,type,value="")=>{
     const div1=document.createElement("div");
     const label=document.createElement("label");
     const input=document.createElement("input");
     input.setAttribute("id",id);
     label.innerText=content;
     input.type=type;
+    if(type==="text"){
+        input.placeholder=value;
+    }else if (type==="checkbox"){
+        input.checked=value;
+    }
     div1.appendChild(label);
     div1.appendChild(input);
     return div1;
@@ -272,6 +277,9 @@ const showSingleThreads=(id)=>{
     removeElement("singleThreadsDetails");
     const page = document.createElement("div");
     page.setAttribute("id","singleThreadsDetails");
+    //2.3.1 add a button in single thread page
+    const editButton=createButton("Edit","edit-thread-button",()=>editThreadCallback(id));
+    page.appendChild(editButton);
     getThreadDetail(id)
     .then((detail)=>{
         const singleDetail = document.createElement("ul");
@@ -291,7 +299,38 @@ const showSingleThreads=(id)=>{
     return page;
 }
 
-//format-date  
+//2.3.1.2 editThreadCallback 1.remove two parts 2.create a new edit page
+const editThreadCallback=(id)=>{
+    console.log(id);
+    removeElement("showThreads");
+    removeElement("singleThreadsDetails");
+    const main=document.getElementById("main");
+    main.appendChild(createEditPage(id));
+}
+
+//2.3.1.3 createEditPage
+const createEditPage=(id)=>{
+    console.log("this is current single threads id:"+id);
+    const page=document.createElement("div");
+    page.setAttribute("id","edit-thread-page");
+    getThreadDetail(id)
+    .then((detail)=>{
+        const editThreadTitle=createLine("Title","editThreadTitle","text",detail.title);
+        const editThreadContent=createLine("Content","editThreadContent","text",detail.content);
+        const editThreadIsPbulic=createLine("IsPbulic","editThreadIsPbulic","checkbox",detail.isPublic);
+        page.appendChild(editThreadTitle);
+        page.appendChild(editThreadContent);
+        page.appendChild(editThreadIsPbulic);
+    })
+    return page;
+}
+//2.3.1 Editing a thread
+//1. add a 'edit' button on single thread page
+//2. the callback function of Edit button
+//(create a new edit page,input field for title, content,  whether or not the thread is private, and whether or not a thread is locked. )
+//3. in edit thread page, a submit button,the button should using API to fetch server. 
+
+//format function----format-date  
 const formatDate=(datestr)=>{
     const date = new Date(datestr);
     const option={
@@ -304,6 +343,7 @@ const formatDate=(datestr)=>{
     };
     return new Intl.DateTimeFormat('default',option).format(date);
 }
+
 
 //------main thread------
 const hash = window.location.hash;
