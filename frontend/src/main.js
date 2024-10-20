@@ -198,6 +198,10 @@ const submitCreateNewThreadCallback=()=>{
 //2.2.2.1
 let start=0;
 const showAllThreads=()=>{
+    const alreadyexist=document.getElementById("showThreads");
+    if(alreadyexist){
+        removeElement("showThreads");
+    }
     const showThreads=document.createElement("div");
     showThreads.setAttribute("id","showThreads");
     getThreads(start)
@@ -210,13 +214,31 @@ const showAllThreads=()=>{
                 showThreads.appendChild(showThreadsDetails(threadDetail));
             })
         });
+        //if threads.length=5, means their may have more threads ,add a more button
+        if(threads.length===5){
+            const moreButton=createButton("More","moreThreadsButton",()=>{
+                start=start+5;
+                const main=document.getElementById("main");
+                main.appendChild(showAllThreads())
+            })
+            showThreads.appendChild(moreButton);
+        }
+        //need a "<" button to look at the previous threads
+        if(start>0){
+            const previousButton=createButton("Previous","previousThreadsButton",()=>{
+                start=start-5;
+                const main=document.getElementById("main");
+                main.appendChild(showAllThreads())
+            })
+            showThreads.appendChild(previousButton);
+        }
     })
     return showThreads;
 }
 
 //2.2.2.2 show threads details
 const showThreadsDetails=(thread)=>{
-    const singleThreads = document.createElement("ol");
+    const singleThreads = document.createElement("ul");
     const singleThreadsAuthor = document.createElement("li");
     const singleThreadsLikes = document.createElement("li");
     const singleThreadsDate = document.createElement("li");
@@ -224,7 +246,7 @@ const showThreadsDetails=(thread)=>{
 
     singleThreadsAuthor.innerText=thread.creatorId;
     singleThreadsLikes.innerText=thread.likes.length;
-    singleThreadsDate.innerText=thread.createdAt;
+    singleThreadsDate.innerText=formatDate(thread.createdAt);
     singleThreadsTitle.innerText=thread.title;
 
     singleThreads.appendChild(singleThreadsTitle);
@@ -269,6 +291,19 @@ const showSingleThreads=(id)=>{
     return page;
 }
 
+//format-date  
+const formatDate=(datestr)=>{
+    const date = new Date(datestr);
+    const option={
+        year:'numeric',
+        month:'long',
+        day:'numeric',
+        hour:'2-digit',
+        minute:'2-digit',
+        hour12:true
+    };
+    return new Intl.DateTimeFormat('default',option).format(date);
+}
 
 //------main thread------
 const hash = window.location.hash;
