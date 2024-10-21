@@ -161,3 +161,17 @@ export const watchThread=(id,turnon)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//get one threads' comments detail
+export const getCommentDetail=(threadId)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch(`http://localhost:5005/comments?threadId=${threadId}`,{
+        method:"GET",
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
