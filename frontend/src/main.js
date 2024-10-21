@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -295,12 +295,19 @@ const showSingleThreads=(id)=>{
         //2.3.3 like threads---1.make sure threads are not locked
         if(!detail.lock){
             const hasliked=detail.likes.includes(parseInt(currentUser));
-            console.log(hasliked);
+            console.log("has liked: "+hasliked);
             //make sure the content of button
             const likeButtonInnertext=hasliked?"not like":"like";
             const likeButton=createButton(likeButtonInnertext,"like-thread-button",()=>likeThreadCallback(id));
             page.appendChild(likeButton);
         }
+        //2.3.4 make sure this thread whether watched by user
+        const haswatched=detail.watchees.includes(parseInt(currentUser));
+        console.log("has watched: "+haswatched);
+        //2.3.4 make sure the content of button
+        const watchButtonInnertext=haswatched?"unwatch":"watch";
+        const watchButton=createButton(watchButtonInnertext,"watch-thread-button",()=>watchThreadCallback(id));
+        page.appendChild(watchButton);
         const singleDetail = document.createElement("ul");
         const singleThreadsLikes = document.createElement("li");
         const singleThreadsContent = document.createElement("li");
@@ -415,6 +422,33 @@ const likeThreadCallback=(id)=>{
         main.appendChild(showSingleThreads(id));
     })
 }
+
+//2.3.4--watch thread--like 2.3.3
+//1.check the thread whether watched by user to makesure button innertext--watch/unwatched
+//2.after make sure the button innertxt, create button
+//3.write watchThread callback function of the button, fetch API, fresh page
+const watchThreadCallback=(id)=>{
+    console.log("this is watch button");
+    let content=document.getElementById("watch-thread-button").innerText;
+    let turnon;
+    //already like, click button means like before, not like threads now
+    if(content==="unwatch"){
+        turnon=false;
+    }else{
+        turnon=true;
+    }
+    watchThread(id,turnon)
+    .then((res)=>{
+        console.log("watch button success");
+        //fresh page
+        removeElement("singleThreadsDetails");
+        removeElement("showThreads");
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
+        main.appendChild(showSingleThreads(id));
+    })
+}
+
 
 //format function----format-date  
 const formatDate=(datestr)=>{

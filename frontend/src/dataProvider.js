@@ -144,3 +144,20 @@ export const likeThread=(id,turnon)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+//watch thread
+export const watchThread=(id,turnon)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/thread/watch',{
+        method:"PUT",
+        body:JSON.stringify({
+            id,
+            turnon,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
