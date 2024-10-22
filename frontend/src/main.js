@@ -479,6 +479,7 @@ const showCommentPage=(comment)=>{
     //the first turn, show all of the comment under this threads
     comment.forEach(comment=>{
         const singleComment=showSingleComment(comment);
+        //---------------there is single comment id---------------------------
         singleComment.id=`comment-${comment.id}`
         commentList.appendChild(singleComment);
     })
@@ -515,10 +516,33 @@ const showSingleComment=(comment)=>{
 //add a callback function on reply button
 const replyCommentCallback=(comment)=>{
     console.log("this part need to write reply function");
+    const page = document.createElement("div");
+    page.setAttribute("id",`reply-${comment.id}`);
+    const replyLine=createLine("Reply: ",`reply-${comment.id}-content`,"text");
+    const createReplyButton=createButton("Submit-Reply",`reply-${comment.id}-button`,()=>createReplyCallbcak(comment));
+    page.appendChild(replyLine);
+    page.appendChild(createReplyButton);
+    const singleComment=document.getElementById(`comment-${comment.id}`);
+    singleComment.appendChild(page);
 }
+
+//createReplyCallbcak
+const createReplyCallbcak=(comment)=>{
+    console.log("press this button,create new reply");
+    const content=document.getElementById(`reply-${comment.id}-content`).value;
+    createNewComment(content,comment.threadId,comment.id)
+    .then((res)=>{
+        console.log(res);
+        console.log("success create new reply");
+        //after success create comment, remove current page and display commments--()
+        removeElement("singleThreadsDetails");
+        const main=document.getElementById("main");
+        main.appendChild(showSingleThreads(comment.threadId));
+    })
+}
+
 //2.4.2. Making a comment
 //if there is not comments, should have a input and a 'Comment' button
-
 const createNewCommentPage=(ThreadId)=>{
     const page = document.createElement("div");
     page.setAttribute("id","createNewCommentPage");
@@ -542,9 +566,8 @@ const createCommentCallbcak=(ThreadId,parentCommentId=null)=>{
         const main=document.getElementById("main");
         main.appendChild(showSingleThreads(ThreadId));
     })
-
-
 }
+
 
 //format function----format-date  
 const formatDate=(datestr)=>{
