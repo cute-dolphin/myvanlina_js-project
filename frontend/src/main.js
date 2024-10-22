@@ -2,7 +2,8 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread,getCommentDetail,createNewComment} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,
+    likeThread,watchThread,getCommentDetail,createNewComment,updateComment,deleteComment,likeComment} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -270,7 +271,7 @@ const showThreadsDetails=(thread)=>{
     return singleThreads;
 }
 
-//-----2.2.3 single thread details-----
+//-------------------------------------------------------------------------------2.2.3 single thread details--------------------------------------------------------------
 //basic thought:each singleThreads(order list) add a eventlistener, callback is create a new single threads detail page on the right
 //callback of crerate page of single threads details
 const showSingleThreads=(id)=>{
@@ -485,7 +486,7 @@ const showCommentPage=(comment)=>{
     //the first turn, show all of the comment under this threads
     comment.forEach(comment=>{
         const singleComment=showSingleComment(comment);
-        //---------------there is single comment id---------------------------
+        //---------------------------------------------------------there is single comment id---------------------------------------------------------
         singleComment.id=`comment-${comment.id}`
         commentList.appendChild(singleComment);
     })
@@ -503,10 +504,21 @@ const showCommentPage=(comment)=>{
     return commentList;
 }
 
+//--------------------------------------------------------------------------single Comment page--------------------------------------------------------
 const showSingleComment=(comment)=>{
+    //singleComment.id=`comment-${comment.id}`
     const singleComment=document.createElement("li");
     //each single comment need to add a reply button
     const replyComment=createButton("Reply",`reply-${comment.id}-comment`,()=>replyCommentCallback(comment));
+    //2.4.3 edit comment button
+    //only creater could edit,if user != creator, edit disappear
+    const commentAuthor=comment.creatorId;
+    const currentUser=localStorage.getItem(AUTH.USER_ID_key);
+    const editCommentButton=createButton("Edit",`edit-${comment.id}-comment`,()=>editCommentCallback(comment));
+    if(String(commentAuthor) !== String(currentUser)){
+        editCommentButton.style.display="none";
+    }
+
     const profileImage=document.createElement("img");
     //need to change realize picture
     profileImage.src="later to realize";
@@ -516,6 +528,7 @@ const showSingleComment=(comment)=>{
     singleComment.appendChild(profileImage);
     singleComment.appendChild(commentContent);
     singleComment.appendChild(replyComment);
+    singleComment.appendChild(editCommentButton);
     //only unlocked threads could be reply
     getThreadDetail(comment.threadId)
     .then((detail)=>{
@@ -524,6 +537,37 @@ const showSingleComment=(comment)=>{
         }
     })
     return singleComment;
+}
+
+//edit Comment button Callback function
+const editCommentCallback=(comment)=>{
+    removeElement(`edit-${comment.id}-comment`);
+    const singleCommnetEditPage=document.getElementById(`comment-${comment.id}`);
+    singleCommnetEditPage.appendChild(createEditCommentPage(comment));
+}
+
+//createEditCommentPage
+const createEditCommentPage=(comment)=>{
+    const page=document.createElement("div");
+    page.setAttribute("id",`edit-${comment.id}-comment-page`);
+    // a innertext, a Submit-Your-Comment
+    const editCommentInput=createLine("Edit Comment Input: ",`edit-${comment.id}-comment-input`,"text",comment.content);
+    const editUpdateButton=createButton("comment",`edit-${comment.id}-comment-submit`,()=>editCommentSubmit(comment));
+    page.appendChild(editCommentInput);
+    page.appendChild(editUpdateButton);
+    return page;
+}
+
+//a submit button,the button should using API to fetch server.
+const editCommentSubmit=(comment)=>{
+    const editCommentInput=document.getElementById(`edit-${comment.id}-comment-input`).value;
+    updateComment(comment.id,editCommentInput)
+    .then((res)=>{
+        console.log(`edit-${comment.id}-success`);
+        removeElement("singleThreadsDetails");
+        const main=document.getElementById("main");
+        main.appendChild(showSingleThreads(comment.threadId));
+    })
 }
 
 //add a callback function on reply button
@@ -547,7 +591,7 @@ const createReplyCallbcak=(comment)=>{
     .then((res)=>{
         console.log(res);
         console.log("success create new reply");
-        //after success create comment, remove current page and display commments--()
+        //---------------------------------------------------------------------after success create comment, remove current page and display commments--()
         removeElement("singleThreadsDetails");
         const main=document.getElementById("main");
         main.appendChild(showSingleThreads(comment.threadId));
