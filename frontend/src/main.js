@@ -241,7 +241,7 @@ const showAllThreads=()=>{
     return showThreads;
 }
 
-//2.2.2.2 show threads details
+//2.2.2.2 show threads details-------these detail in threadsList
 const showThreadsDetails=(thread)=>{
     const singleThreads = document.createElement("ul");
     const singleThreadsAuthor = document.createElement("li");
@@ -335,6 +335,8 @@ const showSingleThreads=(id)=>{
                 console.log("need show the comment");
                 const commentShowPage=showCommentPage(comment);
                 page.appendChild(commentShowPage);
+                //still need to add create comment area,but at the bottom of comments
+                page.appendChild(createNewCommentPage(id));
             }
             
         })
@@ -470,6 +472,8 @@ const watchThreadCallback=(id)=>{
 //1.if current threads don't have any comment,the comment page has an input and a button,click button,create new comment.
 //2.if already exist comment, show
 //3.add button on comment page----edit and like, throughts like 2.3
+
+//show page still need time display and order by time
 const showCommentPage=(comment)=>{
     const commentList=document.createElement("ul");
     //the first turn, show all of the comment under this threads
@@ -494,6 +498,8 @@ const showCommentPage=(comment)=>{
 
 const showSingleComment=(comment)=>{
     const singleComment=document.createElement("li");
+    //each single comment need to add a reply button
+    const replyComment=createButton("Reply","reply-single-comment",()=>replyCommentCallback(comment));
     const profileImage=document.createElement("img");
     //need to change realize picture
     profileImage.src="later to realize";
@@ -502,14 +508,22 @@ const showSingleComment=(comment)=>{
     commentContent.innerText=comment.content;
     singleComment.appendChild(profileImage);
     singleComment.appendChild(commentContent);
+    singleComment.appendChild(replyComment);
     return singleComment;
 }
+
+//add a callback function on reply button
+const replyCommentCallback=(comment)=>{
+    console.log("this part need to write reply function");
+}
+//2.4.2. Making a comment
+//if there is not comments, should have a input and a 'Comment' button
 
 const createNewCommentPage=(ThreadId)=>{
     const page = document.createElement("div");
     page.setAttribute("id","createNewCommentPage");
     const commentLine=createLine("Comment: ","create-comment-line","text");
-    const createCommentButton=createButton("Submit","create-comment-button",()=>createCommentCallbcak(ThreadId));
+    const createCommentButton=createButton("Comment","create-comment-button",()=>createCommentCallbcak(ThreadId));
     page.appendChild(commentLine);
     page.appendChild(createCommentButton);
     return page;
@@ -523,6 +537,10 @@ const createCommentCallbcak=(ThreadId,parentCommentId=null)=>{
     .then((res)=>{
         console.log(res);
         console.log("success create new comment");
+        //after success create comment, remove current page and display commments--()
+        removeElement("singleThreadsDetails");
+        const main=document.getElementById("main");
+        main.appendChild(showSingleThreads(ThreadId));
     })
 
 
