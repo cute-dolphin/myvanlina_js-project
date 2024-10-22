@@ -329,14 +329,20 @@ const showSingleThreads=(id)=>{
             if(comment.length===0){
                 //if there is not any exist comment, add a create comment page 
                 console.log("need add a create comment page");
-                page.appendChild(createNewCommentPage(id));
+                //only not locked threads could be comment
+                if(!detail.lock){
+                    page.appendChild(createNewCommentPage(id));
+                }
             }else{
                 //if there already exist comment ,add a new page to show comment
                 console.log("need show the comment");
                 const commentShowPage=showCommentPage(comment);
                 page.appendChild(commentShowPage);
-                //still need to add create comment area,but at the bottom of comments
-                page.appendChild(createNewCommentPage(id));
+                //only not locked threads could be comment
+                if(!detail.lock){
+                    //still need to add create comment area,but at the bottom of comments
+                    page.appendChild(createNewCommentPage(id));
+                }
             }
             
         })
@@ -500,7 +506,7 @@ const showCommentPage=(comment)=>{
 const showSingleComment=(comment)=>{
     const singleComment=document.createElement("li");
     //each single comment need to add a reply button
-    const replyComment=createButton("Reply","reply-single-comment",()=>replyCommentCallback(comment));
+    const replyComment=createButton("Reply",`reply-${comment.id}-comment`,()=>replyCommentCallback(comment));
     const profileImage=document.createElement("img");
     //need to change realize picture
     profileImage.src="later to realize";
@@ -510,6 +516,13 @@ const showSingleComment=(comment)=>{
     singleComment.appendChild(profileImage);
     singleComment.appendChild(commentContent);
     singleComment.appendChild(replyComment);
+    //only unlocked threads could be reply
+    getThreadDetail(comment.threadId)
+    .then((detail)=>{
+        if(detail.lock){
+            replyComment.style.display="none";
+        }
+    })
     return singleComment;
 }
 
