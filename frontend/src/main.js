@@ -518,7 +518,11 @@ const showSingleComment=(comment)=>{
     if(String(commentAuthor) !== String(currentUser)){
         editCommentButton.style.display="none";
     }
-
+    //like comment function
+    const hasliked=comment.likes.includes(parseInt(currentUser));
+    //make sure the content of button
+    const likeButtonInnertext=hasliked?"unlike":"like";
+    const likeButton=createButton(likeButtonInnertext,`like-comment-${comment.id}-button`,()=>likeCommentCallback(comment));
     const profileImage=document.createElement("img");
     //need to change realize picture
     profileImage.src="later to realize";
@@ -529,6 +533,7 @@ const showSingleComment=(comment)=>{
     singleComment.appendChild(commentContent);
     singleComment.appendChild(replyComment);
     singleComment.appendChild(editCommentButton);
+    singleComment.appendChild(likeButton);
     //only unlocked threads could be reply
     getThreadDetail(comment.threadId)
     .then((detail)=>{
@@ -537,6 +542,24 @@ const showSingleComment=(comment)=>{
         }
     })
     return singleComment;
+}
+//like comment callback function
+const likeCommentCallback=(comment)=>{
+    let content=document.getElementById(`like-comment-${comment.id}-button`).innerText;
+    let turnon;
+    //already like, click button means like before, not like threads now
+    if(content==="unlike"){
+        turnon=false;
+    }else{
+        turnon=true;
+    }
+    likeComment(comment.id,turnon)
+    .then((res)=>{
+        //fresh page
+        removeElement("singleThreadsDetails");
+        const main=document.getElementById("main");
+        main.appendChild(showSingleThreads(comment.threadId));
+    })
 }
 
 //edit Comment button Callback function
