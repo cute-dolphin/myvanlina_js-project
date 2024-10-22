@@ -331,7 +331,10 @@ const showSingleThreads=(id)=>{
                 console.log("need add a create comment page");
                 page.appendChild(createNewCommentPage(id));
             }else{
+                //if there already exist comment ,add a new page to show comment
                 console.log("need show the comment");
+                const commentShowPage=showCommentPage(comment);
+                page.appendChild(commentShowPage);
             }
             
         })
@@ -467,6 +470,41 @@ const watchThreadCallback=(id)=>{
 //1.if current threads don't have any comment,the comment page has an input and a button,click button,create new comment.
 //2.if already exist comment, show
 //3.add button on comment page----edit and like, throughts like 2.3
+const showCommentPage=(comment)=>{
+    const commentList=document.createElement("ul");
+    //the first turn, show all of the comment under this threads
+    comment.forEach(comment=>{
+        const singleComment=showSingleComment(comment);
+        singleComment.id=`comment-${comment.id}`
+        commentList.appendChild(singleComment);
+    })
+    //the second turn, check the parentsid, move each comment under their parents comments
+    comment.forEach(comment=>{
+        if(comment.parentCommentId){
+            //find parent
+            const parent=commentList.querySelector(`#comment-${comment.parentCommentId}`);
+            const commentItem=commentList.querySelector(`#comment-${comment.id}`);
+            const childComment=document.createElement("ul");
+            childComment.appendChild(commentItem);
+            parent.appendChild(childComment);
+        }
+    })
+    return commentList;
+}
+
+const showSingleComment=(comment)=>{
+    const singleComment=document.createElement("li");
+    const profileImage=document.createElement("img");
+    //need to change realize picture
+    profileImage.src="later to realize";
+    profileImage.alt="user Img";
+    const commentContent=document.createElement("div");
+    commentContent.innerText=comment.content;
+    singleComment.appendChild(profileImage);
+    singleComment.appendChild(commentContent);
+    return singleComment;
+}
+
 const createNewCommentPage=(ThreadId)=>{
     const page = document.createElement("div");
     page.setAttribute("id","createNewCommentPage");
