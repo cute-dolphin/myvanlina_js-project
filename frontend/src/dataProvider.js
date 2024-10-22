@@ -194,3 +194,40 @@ export const createNewComment=(content,threadId,parentCommentId)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//update comment
+export const updateComment=(id,content)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/comment',{
+        method:"PUT",
+        body:JSON.stringify({
+            id,
+            content,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
+
+//delete comment
+export const deleteComment=(id)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/comment',{
+        method:"DELETE",
+        body:JSON.stringify({
+            id,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
+
+//like a comment
