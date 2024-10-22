@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread,getCommentDetail} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -321,7 +321,13 @@ const showSingleThreads=(id)=>{
         singleDetail.appendChild(singleThreadsContent);
         singleDetail.appendChild(singleThreadsLikes);
         page.appendChild(singleDetail);
-        
+        //2.4.1 1.check current threads already exist comment
+        getCommentDetail(id)
+        .then((res)=>{
+            console.log("this is a test of get comment detail API");
+            console.log(res);
+            //if there is not any exist comment, add a create comment page
+        })
     })
     return page;
 }
@@ -448,6 +454,13 @@ const watchThreadCallback=(id)=>{
         main.appendChild(showSingleThreads(id));
     })
 }
+
+//2.4 basic throughts
+//in individual threads page, use getcommets detail API----show-Single-Thread.append(comment page)
+//1.if current threads don't have any comment,the comment page has an input and a button,click button,create new comment.
+//2.if already exist comment, show
+//3.add button on comment page----edit and like, throughts like 2.3
+
 
 
 //format function----format-date  

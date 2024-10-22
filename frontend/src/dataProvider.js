@@ -175,3 +175,22 @@ export const getCommentDetail=(threadId)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//create new comment 
+export const createNewComment=(content,threadId,parentCommentId)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch(`http://localhost:5005/comment`,{
+        method:"POST",
+        body:JSON.stringify({
+            content,
+            threadId,
+            parentCommentId,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
