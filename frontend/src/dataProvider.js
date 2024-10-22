@@ -231,3 +231,19 @@ export const deleteComment=(id)=>{
 }
 
 //like a comment
+export const likeComment=(id,turnon)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/comment/like',{
+        method:"PUT",
+        body:JSON.stringify({
+            id,
+            turnon,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
