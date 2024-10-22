@@ -2,7 +2,7 @@ import { BACKEND_PORT } from './config.js';
 // A helper you may want to use when uploading new images to the server.
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
-import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread,getCommentDetail} from './dataProvider.js'
+import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,likeThread,watchThread,getCommentDetail,createNewComment} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -323,10 +323,17 @@ const showSingleThreads=(id)=>{
         page.appendChild(singleDetail);
         //2.4.1 1.check current threads already exist comment
         getCommentDetail(id)
-        .then((res)=>{
+        .then((comment)=>{
             console.log("this is a test of get comment detail API");
-            console.log(res);
-            //if there is not any exist comment, add a create comment page
+            console.log(comment);
+            if(comment.length===0){
+                //if there is not any exist comment, add a create comment page 
+                console.log("need add a create comment page");
+                page.appendChild(createNewCommentPage(id));
+            }else{
+                console.log("need show the comment");
+            }
+            
         })
     })
     return page;
@@ -460,8 +467,28 @@ const watchThreadCallback=(id)=>{
 //1.if current threads don't have any comment,the comment page has an input and a button,click button,create new comment.
 //2.if already exist comment, show
 //3.add button on comment page----edit and like, throughts like 2.3
+const createNewCommentPage=(ThreadId)=>{
+    const page = document.createElement("div");
+    page.setAttribute("id","createNewCommentPage");
+    const commentLine=createLine("Comment: ","create-comment-line","text");
+    const createCommentButton=createButton("Submit","create-comment-button",()=>createCommentCallbcak(ThreadId));
+    page.appendChild(commentLine);
+    page.appendChild(createCommentButton);
+    return page;
+}
+
+//createCommentCallbcak
+const createCommentCallbcak=(ThreadId,parentCommentId=null)=>{
+    console.log("press this button,create new comment");
+    const content=document.getElementById("create-comment-line").value;
+    createNewComment(content,ThreadId,parentCommentId)
+    .then((res)=>{
+        console.log(res);
+        console.log("success create new comment");
+    })
 
 
+}
 
 //format function----format-date  
 const formatDate=(datestr)=>{
