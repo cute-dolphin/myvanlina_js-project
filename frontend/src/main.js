@@ -572,10 +572,57 @@ const showUserDetail=(comment)=>{
         page.appendChild(userImage);
         page.appendChild(userAdmin);
         const backToThread=createButton("Back","backToThreadButton",()=>backToThreadCallback(comment));
+        page.appendChild(showAllUserThreads(comment));
         page.appendChild(backToThread);
     })
     return page;
 }
+
+//show all thread created by this user
+//1.select all thread --while--when start+5!=content.lengh,stop  from all threads array,use threadDetail,for each, use getThreadsDetail,creator = user, add in page
+const showAllUserThreads = (comment) => {
+    const showThreads = document.createElement("div");
+    showThreads.setAttribute("id", "showAllUserThreads");
+    let userstart = 0;
+    let allThreads = [];
+    let userthreadArray = [];
+    // collect threads
+    const collectThreads = () => {
+        getThreads(userstart)
+            .then((threads) => {
+                if (threads.length === 0) {
+                    // already collect all threads,start select and deal with
+                    allThreads.forEach(detail => {
+                        if (detail.creatorId === comment.creatorId) {
+                            userthreadArray.push(detail);
+                        }
+                    });
+
+                    userthreadArray.forEach(userThreadsDetail => {
+                        console.log(userThreadsDetail);
+                        showThreads.appendChild(showThreadsDetails(userThreadsDetail));
+                    });
+                } else {
+                    // collect all threads
+                    let detailsCollected = 0; 
+                    threads.forEach(id => {
+                        getThreadDetail(id)
+                            .then((threadDetail) => {
+                                allThreads.push(threadDetail);
+                                detailsCollected++;
+                                if (detailsCollected === threads.length) {
+                                    userstart += 5;
+                                    collectThreads(); 
+                                }
+                            });
+                    });
+                }
+            });
+    };
+    //start collectThreads function
+    collectThreads();
+    return showThreads;
+};
 
 //backToThreadCallback
 const backToThreadCallback=(comment)=>{
