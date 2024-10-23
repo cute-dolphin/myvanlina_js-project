@@ -249,7 +249,14 @@ const showThreadsDetails=(thread)=>{
     const singleThreadsLikes = document.createElement("li");
     const singleThreadsDate = document.createElement("li");
     const singleThreadsTitle = document.createElement("li");
-
+    const singleThreadsComments = document.createElement("li");
+    //------------------------------------------------------------------------need count comments
+    getCommentDetail(thread.id)
+    .then((comments)=>{
+        const commentsNumber=comments.length;
+        singleThreadsComments.innerText=commentsNumber;
+    })
+    
     singleThreadsAuthor.innerText=thread.creatorId;
     singleThreadsLikes.innerText=thread.likes.length;
     singleThreadsDate.innerText=formatDate(thread.createdAt);
@@ -259,6 +266,7 @@ const showThreadsDetails=(thread)=>{
     singleThreads.appendChild(singleThreadsDate);
     singleThreads.appendChild(singleThreadsAuthor);
     singleThreads.appendChild(singleThreadsLikes);
+    singleThreads.appendChild(singleThreadsComments);
     //2.2.3 set attribute to store the thread's id
     singleThreads.setAttribute("singleThread-id",thread.id);
     //add event listener, click singleThreads, create page
