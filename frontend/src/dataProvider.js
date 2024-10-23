@@ -247,3 +247,55 @@ export const likeComment=(id,turnon)=>{
     .then((response)=>response.json())
     .then(errorThrow)
 }
+
+//get user detail
+export const getUserDetail=(userId)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch(`http://localhost:5005/user?userId=${userId}`,{
+        method:"GET",
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
+
+//update user detail
+export const updateUser=(email,password,name,image)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/user',{
+        method:"PUT",
+        body:JSON.stringify({
+            email,
+            password,
+            name,
+            image,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
+
+//whether admin
+export const whetherAdmin=(userId,turnon)=>{
+    const token=localStorage.getItem(AUTH.TOKEN_KEY);
+    return fetch('http://localhost:5005/user/admin',{
+        method:"PUT",
+        body:JSON.stringify({
+            userId,
+            turnon,
+        }),
+        headers:{
+            "Content-type":"application/json; charset=UTF-8",
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    .then((response)=>response.json())
+    .then(errorThrow)
+}
