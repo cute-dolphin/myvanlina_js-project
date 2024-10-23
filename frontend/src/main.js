@@ -3,7 +3,7 @@ import { BACKEND_PORT } from './config.js';
 import { fileToDataUrl } from './helpers.js';
 import {login} from './dataProvider.js'
 import {regist,createThread,getThreads,getThreadDetail,editThread,deleteThread,
-    likeThread,watchThread,getCommentDetail,createNewComment,updateComment,deleteComment,likeComment} from './dataProvider.js'
+    likeThread,watchThread,getCommentDetail,createNewComment,updateComment,deleteComment,likeComment,getUserDetail,updateUser,whetherAdmin} from './dataProvider.js'
 import { AUTH } from './constants.js';
 //functinon parts
 //------------login------------
@@ -401,6 +401,7 @@ const editThreadSubmit=(detail)=>{
         //back to (create) thread page
         const main=document.getElementById("main");
         main.appendChild(showAllThreads());
+        main.appendChild(showSingleThreads(detail.id));
     })
 }
 
@@ -527,6 +528,14 @@ const showSingleComment=(comment)=>{
     //need to change realize picture
     profileImage.src="later to realize";
     profileImage.alt="user Img";
+    //2.5 click image, display user Information
+    profileImage.onclick=()=>{
+        removeElement("showThreads");
+        removeElement("singleThreadsDetails");
+        const main=document.getElementById("main");
+        main.appendChild(showUserDetail(comment));
+    }
+
     const commentContent=document.createElement("div");
     commentContent.innerText=comment.content;
     singleComment.appendChild(profileImage);
@@ -543,6 +552,39 @@ const showSingleComment=(comment)=>{
     })
     return singleComment;
 }
+
+const showUserDetail=(comment)=>{
+    const page=document.createElement("ul");
+    page.setAttribute("id","userDetailPage");
+    console.log("click user img react");
+    getUserDetail(comment.creatorId)
+    .then((userDetail)=>{
+        const userEmail=document.createElement("li");
+        const userName=document.createElement("li");
+        const userImage=document.createElement("li");
+        const userAdmin=document.createElement("li");
+        userEmail.innerText=userDetail.email;
+        userName.innerText=userDetail.name;
+        userImage.innerText=userDetail.image;
+        userAdmin.innerText=userDetail.admin;
+        page.appendChild(userEmail);
+        page.appendChild(userName);
+        page.appendChild(userImage);
+        page.appendChild(userAdmin);
+        const backToThread=createButton("Back","backToThreadButton",()=>backToThreadCallback(comment));
+        page.appendChild(backToThread);
+    })
+    return page;
+}
+
+//backToThreadCallback
+const backToThreadCallback=(comment)=>{
+    removeElement("userDetailPage")
+    const main=document.getElementById("main");
+    main.appendChild(showAllThreads());
+    main.appendChild(showSingleThreads(comment.threadId));
+}
+
 //like comment callback function
 const likeCommentCallback=(comment)=>{
     let content=document.getElementById(`like-comment-${comment.id}-button`).innerText;
