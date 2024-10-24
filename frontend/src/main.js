@@ -194,6 +194,12 @@ const createCurrentUserDetailPage=()=>{
 //editSelfProfileCallback
 const editSelfProfileCallback=()=>{
     removeElement("editSelfProfileButton");
+    const editPageSpace=document.getElementById("editPageSpace");
+    editPageSpace.appendChild(createEditSelfInfoPage());
+}
+
+//createEditPage
+const createEditSelfInfoPage=()=>{
     const editPage=document.createElement("div");
     const userEmail=createLine("New email: ","editEmail","text");
     const userName=createLine("New name: ","editName","text");
@@ -205,9 +211,18 @@ const editSelfProfileCallback=()=>{
     editPage.appendChild(userName);
     editPage.appendChild(userImage);
     const submitEditUserInfo=createButton("Submit-Edit","Submit-Edit",submitEditUserInfoCallback);
+    const cancelEditUserInfo=createButton("Cancel-Edit","Cancel-Edit",cancelEditUserInfoCallback);
     editPage.appendChild(submitEditUserInfo);
-    const editPageSpace=document.getElementById("editPageSpace");
-    editPageSpace.appendChild(editPage);
+    editPage.appendChild(cancelEditUserInfo);
+    return editPage
+}
+
+//cancelEditUserInfo
+const cancelEditUserInfoCallback=()=>{
+    //fresh page
+    removeElement("currentUserDetailPage");
+    const main=document.getElementById("main");
+    main.appendChild(createCurrentUserDetailPage());
 }
 
 //submitEditUserInfoCallback
