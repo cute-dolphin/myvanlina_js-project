@@ -156,6 +156,12 @@ const lookProfileCallback=()=>{
     console.log("display current user detail");
     removeElement("showThreads");
     removeElement("singleThreadsDetails");
+    const main=document.getElementById("main");
+    main.appendChild(createCurrentUserDetailPage());
+}
+
+//createCurrentUserDetailPage
+const createCurrentUserDetailPage=()=>{
     const userId=parseInt(localStorage.getItem(AUTH.USER_ID_key));
     const page=document.createElement("ul");
     page.setAttribute("id","currentUserDetailPage");
@@ -169,17 +175,55 @@ const lookProfileCallback=()=>{
         userName.innerText=userDetail.name;
         userImage.innerText=userDetail.image;
         userAdmin.innerText=userDetail.admin;
+        const editSelfProfile=createButton("Edit-Profile","editSelfProfileButton",editSelfProfileCallback);
+        const backToThreadPage=createButton("BacktoThreadPage","backToThreadPageButton",backToThreadPageCallback);
+        const editPageSpace =document.createElement("div")
+        editPageSpace.setAttribute("id","editPageSpace");
         page.appendChild(userEmail);
         page.appendChild(userName);
         page.appendChild(userImage);
         page.appendChild(userAdmin);
-        const backToThreadPage=createButton("BacktoThreadPage","backToThreadPageButton",backToThreadPageCallback);
+        page.appendChild(editSelfProfile);
+        page.appendChild(editPageSpace);
         page.appendChild(showAllUserThreads(userId));
         page.appendChild(backToThreadPage);
-        const main=document.getElementById("main");
-        main.appendChild(page);
     })
+    return page;
+}
+
+//editSelfProfileCallback
+const editSelfProfileCallback=()=>{
+    removeElement("editSelfProfileButton");
+    const editPage=document.createElement("div");
+    const userEmail=createLine("New email: ","editEmail","text");
+    const userName=createLine("New name: ","editName","text");
+    const userImage=createLine("New image src: ","editImage","text");
+    const userPassword=createLine("New Password: ","editPassword","text");
     
+    editPage.appendChild(userEmail);
+    editPage.appendChild(userPassword);
+    editPage.appendChild(userName);
+    editPage.appendChild(userImage);
+    const submitEditUserInfo=createButton("Submit-Edit","Submit-Edit",submitEditUserInfoCallback);
+    editPage.appendChild(submitEditUserInfo);
+    const editPageSpace=document.getElementById("editPageSpace");
+    editPageSpace.appendChild(editPage);
+}
+
+//submitEditUserInfoCallback
+const submitEditUserInfoCallback=()=>{
+    const userEmail=document.getElementById("editEmail").value;
+    const userName=document.getElementById("editName").value;
+    const userImage=document.getElementById("editImage").value;
+    const userPassword=document.getElementById("editPassword").value;
+    updateUser(userEmail,userPassword,userName,userImage)
+    .then((res)=>{
+        console.log("edit current user detail successful");
+    })
+    //remove current page and fresh page;
+    removeElement("currentUserDetailPage");
+    const main=document.getElementById("main");
+    main.appendChild(createCurrentUserDetailPage());
 }
 
 //backToThreadPageCallback
@@ -188,6 +232,8 @@ const backToThreadPageCallback=()=>{
     const main=document.getElementById("main");
     main.appendChild(showAllThreads());
 }
+
+
 
 //-----2.2.1-----
 //------createThread------
