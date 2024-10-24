@@ -143,9 +143,50 @@ const createDashboard=()=>{
     headerButtons.setAttribute("id","headerButtons");
     const logout=createButton("Logout","logout",logoutCallback);
     const createthread=createButton("Create-thread","createthread",createthreadCallback);
+    //2.5.2 add profile button on dashboard to get user profile
+    const profile=createButton("Profile","currentuserprofile",lookProfileCallback);
     headerButtons.appendChild(logout);
     headerButtons.appendChild(createthread);
+    headerButtons.appendChild(profile);
     return headerButtons;
+}
+
+//lookProfileCallback
+const lookProfileCallback=()=>{
+    console.log("display current user detail");
+    removeElement("showThreads");
+    removeElement("singleThreadsDetails");
+    const userId=parseInt(localStorage.getItem(AUTH.USER_ID_key));
+    const page=document.createElement("ul");
+    page.setAttribute("id","currentUserDetailPage");
+    getUserDetail(userId)
+    .then((userDetail)=>{
+        const userEmail=document.createElement("li");
+        const userName=document.createElement("li");
+        const userImage=document.createElement("li");
+        const userAdmin=document.createElement("li");
+        userEmail.innerText=userDetail.email;
+        userName.innerText=userDetail.name;
+        userImage.innerText=userDetail.image;
+        userAdmin.innerText=userDetail.admin;
+        page.appendChild(userEmail);
+        page.appendChild(userName);
+        page.appendChild(userImage);
+        page.appendChild(userAdmin);
+        const backToThreadPage=createButton("BacktoThreadPage","backToThreadPageButton",backToThreadPageCallback);
+        page.appendChild(showAllUserThreads(userId));
+        page.appendChild(backToThreadPage);
+        const main=document.getElementById("main");
+        main.appendChild(page);
+    })
+    
+}
+
+//backToThreadPageCallback
+const backToThreadPageCallback=()=>{
+    removeElement("currentUserDetailPage");
+    const main=document.getElementById("main");
+    main.appendChild(showAllThreads());
 }
 
 //-----2.2.1-----
@@ -256,7 +297,7 @@ const showThreadsDetails=(thread)=>{
         const commentsNumber=comments.length;
         singleThreadsComments.innerText=commentsNumber;
     })
-    
+
     singleThreadsAuthor.innerText=thread.creatorId;
     singleThreadsLikes.innerText=thread.likes.length;
     singleThreadsDate.innerText=formatDate(thread.createdAt);
@@ -580,7 +621,7 @@ const showUserDetail=(comment)=>{
         page.appendChild(userImage);
         page.appendChild(userAdmin);
         const backToThread=createButton("Back","backToThreadButton",()=>backToThreadCallback(comment));
-        page.appendChild(showAllUserThreads(comment));
+        page.appendChild(showAllUserThreads(comment.creatorId));
         page.appendChild(backToThread);
     })
     return page;
@@ -588,7 +629,7 @@ const showUserDetail=(comment)=>{
 
 //show all thread created by this user
 //1.select all thread --while--when start+5!=content.lengh,stop  from all threads array,use threadDetail,for each, use getThreadsDetail,creator = user, add in page
-const showAllUserThreads = (comment) => {
+const showAllUserThreads = (userId) => {
     const showThreads = document.createElement("div");
     showThreads.setAttribute("id", "showAllUserThreads");
     let userstart = 0;
@@ -601,7 +642,7 @@ const showAllUserThreads = (comment) => {
                 if (threads.length === 0) {
                     // already collect all threads,start select and deal with
                     allThreads.forEach(detail => {
-                        if (detail.creatorId === comment.creatorId) {
+                        if (detail.creatorId === userId) {
                             userthreadArray.push(detail);
                         }
                     });
@@ -760,6 +801,7 @@ const formatDate=(datestr)=>{
     return new Intl.DateTimeFormat('default',option).format(date);
 }
 
+//problem need to check--1. page fresh 2 comment time 3 order by time
 
 //------main thread------
 const hash = window.location.hash;
