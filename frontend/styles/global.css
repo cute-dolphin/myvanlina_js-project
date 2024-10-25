@@ -123,3 +123,40 @@ button:hover {
 li {
     margin-bottom: 15px;
 }
+
+#singleThreadsDetails,
+#showThreads ul {
+    flex-grow: 1;
+}
+
+#create-thread-form,
+#edit-thread-page,
+#showThreads {
+    flex-basis: 100%;
+}
+
+ul.showInfoLine {
+    padding: 15px;
+    border-bottom: 1px solid #ccc;
+}
+
+img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* Comment Section */
+#showComments {
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.reply {
+    padding-left: 20px;
+    margin-top: 10px;
+}
+

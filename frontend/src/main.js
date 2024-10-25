@@ -363,6 +363,7 @@ const showAllThreads=()=>{
         //need a "<" button to look at the previous threads
         if(start>0){
             const previousButton=createButton("Previous","previousThreadsButton",()=>{
+                removeElement("singleThreadsDetails");
                 start=start-5;
                 const main=document.getElementById("main");
                 main.appendChild(showAllThreads())
