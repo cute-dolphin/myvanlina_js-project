@@ -184,12 +184,13 @@ const createCurrentUserDetailPage=()=>{
     .then((userDetail)=>{
         const userEmail=document.createElement("div");
         const userName=document.createElement("div");
-        const userImage=document.createElement("div");
+        const userImage=document.createElement("img");
         const userAdmin=document.createElement("div");
 
         userEmail.innerText=userDetail.email;
         userName.innerText=userDetail.name;
-        userImage.innerText=userDetail.image;
+        userImage.src=userDetail.image;
+        userImage.alt="user img";
         userAdmin.innerText=userDetail.admin;
 
         const userEmailLine=createShowInfoLine("Email: ",userEmail);
@@ -682,9 +683,14 @@ const showSingleComment=(comment)=>{
     const likeButtonInnertext=hasliked?"unlike":"like";
     const likeButton=createButton(likeButtonInnertext,`like-comment-${comment.id}-button`,()=>likeCommentCallback(comment));
     const profileImage=document.createElement("img");
+    //get user image
+    getUserDetail(comment.creatorId)
+    .then((res)=>{
+        profileImage.src=res.image;
+        profileImage.alt="user Img";
+    })
     //need to change realize picture
-    profileImage.src="later to realize";
-    profileImage.alt="user Img";
+    
     //2.5 click image, display user Information
     profileImage.onclick=()=>{
         removeElement("showThreads");
@@ -721,11 +727,12 @@ const showUserDetail=(comment)=>{
     .then((userDetail)=>{
         const userEmail=document.createElement("div");
         const userName=document.createElement("div");
-        const userImage=document.createElement("div");
+        const userImage=document.createElement("img");
         const userAdmin=document.createElement("div");
         userEmail.innerText=userDetail.email;
         userName.innerText=userDetail.name;
-        userImage.innerText=userDetail.image;
+        userImage.src=userDetail.image;
+        userImage.alt="user img";
         userAdmin.innerText=userDetail.admin;
 
         const userEmailLine=createShowInfoLine("Email: ",userEmail);
@@ -952,7 +959,6 @@ const formatTimeSince=(commentTime)=> {
 const sortCommentsDescending=(comments)=> {
     return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 }
-//problem need to check--1. page fresh 2 comment time 3 order by time
 
 //------main thread------
 const hash = window.location.hash;
