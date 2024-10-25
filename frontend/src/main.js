@@ -27,7 +27,9 @@ const createLine=(content,id,type,value="")=>{
 
 //create a line, use to show information      label:information
 const createShowInfoLine=(content,element)=>{
-    const div1=document.createElement("div");
+    const div1=document.createElement("li");
+    div1.setAttribute("class","showInfoLine");
+    div1.style.display="flex";
     const label=document.createElement("label");
     label.innerText=content;
     div1.appendChild(label);
@@ -142,6 +144,7 @@ const logoutCallback=()=>{
     removeElement("headerButtons");
     removeElement("showThreads");
     removeElement("singleThreadsDetails");
+    removeElement("edit-thread-page");
     localStorage.clear();
     const main=document.getElementById("main");
     main.appendChild(createLoginForm());
@@ -178,22 +181,29 @@ const createCurrentUserDetailPage=()=>{
     page.setAttribute("id","currentUserDetailPage");
     getUserDetail(userId)
     .then((userDetail)=>{
-        const userEmail=document.createElement("li");
-        const userName=document.createElement("li");
-        const userImage=document.createElement("li");
-        const userAdmin=document.createElement("li");
+        const userEmail=document.createElement("div");
+        const userName=document.createElement("div");
+        const userImage=document.createElement("div");
+        const userAdmin=document.createElement("div");
+
         userEmail.innerText=userDetail.email;
         userName.innerText=userDetail.name;
         userImage.innerText=userDetail.image;
         userAdmin.innerText=userDetail.admin;
+
+        const userEmailLine=createShowInfoLine("Email: ",userEmail);
+        const userNameLine=createShowInfoLine("Name: ",userName);
+        const userImageLine=createShowInfoLine("Image: ",userImage);
+        const userAdminLine=createShowInfoLine("IsAdmin: ",userAdmin);
+
         const editSelfProfile=createButton("Edit-Profile","editSelfProfileButton",editSelfProfileCallback);
         const backToThreadPage=createButton("BacktoThreadPage","backToThreadPageButton",backToThreadPageCallback);
         const editPageSpace =document.createElement("div")
         editPageSpace.setAttribute("id","editPageSpace");
-        page.appendChild(userEmail);
-        page.appendChild(userName);
-        page.appendChild(userImage);
-        page.appendChild(userAdmin);
+        page.appendChild(userEmailLine);
+        page.appendChild(userNameLine);
+        page.appendChild(userImageLine);
+        page.appendChild(userAdminLine);
         page.appendChild(editSelfProfile);
         page.appendChild(editPageSpace);
         page.appendChild(showAllUserThreads(userId));
@@ -364,11 +374,11 @@ const showAllThreads=()=>{
 //2.2.2.2 show threads details-------these detail in threadsList
 const showThreadsDetails=(thread)=>{
     const singleThreads = document.createElement("ul");
-    const singleThreadsAuthor = document.createElement("li");
-    const singleThreadsLikes = document.createElement("li");
-    const singleThreadsDate = document.createElement("li");
-    const singleThreadsTitle = document.createElement("li");
-    const singleThreadsComments = document.createElement("li");
+    const singleThreadsAuthor = document.createElement("div");
+    const singleThreadsLikes = document.createElement("div");
+    const singleThreadsDate = document.createElement("div");
+    const singleThreadsTitle = document.createElement("div");
+    const singleThreadsComments = document.createElement("div");
     //------------------------------------------------------------------------need count comments
     getCommentDetail(thread.id)
     .then((comments)=>{
@@ -381,11 +391,17 @@ const showThreadsDetails=(thread)=>{
     singleThreadsDate.innerText=formatDate(thread.createdAt);
     singleThreadsTitle.innerText=thread.title;
 
-    singleThreads.appendChild(singleThreadsTitle);
-    singleThreads.appendChild(singleThreadsDate);
-    singleThreads.appendChild(singleThreadsAuthor);
-    singleThreads.appendChild(singleThreadsLikes);
-    singleThreads.appendChild(singleThreadsComments);
+    const singleThreadsAuthorLine=createShowInfoLine("creator: ",singleThreadsAuthor);
+    const singleThreadsLikesLine=createShowInfoLine("likes: ",singleThreadsLikes);
+    const singleThreadsDateLine=createShowInfoLine("date: ",singleThreadsDate);
+    const singleThreadsTitleLine=createShowInfoLine("title: ",singleThreadsTitle);
+    const singleThreadsCommentsLine=createShowInfoLine("comments: ",singleThreadsComments);
+
+    singleThreads.appendChild(singleThreadsTitleLine);
+    singleThreads.appendChild(singleThreadsDateLine);
+    singleThreads.appendChild(singleThreadsAuthorLine);
+    singleThreads.appendChild(singleThreadsLikesLine);
+    singleThreads.appendChild(singleThreadsCommentsLine);
     //2.2.3 set attribute to store the thread's id
     singleThreads.setAttribute("singleThread-id",thread.id);
     //add event listener, click singleThreads, create page
@@ -437,17 +453,21 @@ const showSingleThreads=(id)=>{
         const watchButton=createButton(watchButtonInnertext,"watch-thread-button",()=>watchThreadCallback(id));
         page.appendChild(watchButton);
         const singleDetail = document.createElement("ul");
-        const singleThreadsLikes = document.createElement("li");
-        const singleThreadsContent = document.createElement("li");
-        const singleThreadsTitle = document.createElement("li");
+        const singleThreadsLikes = document.createElement("div");
+        const singleThreadsContent = document.createElement("div");
+        const singleThreadsTitle = document.createElement("div");
 
         singleThreadsLikes.innerText=detail.likes.length;
         singleThreadsContent.innerText=detail.content;
         singleThreadsTitle.innerText=detail.title;
 
-        singleDetail.appendChild(singleThreadsTitle);
-        singleDetail.appendChild(singleThreadsContent);
-        singleDetail.appendChild(singleThreadsLikes);
+        const singleThreadsLikesLine=createShowInfoLine("likes:  ",singleThreadsLikes);
+        const singleThreadsContentLine=createShowInfoLine("content:  ",singleThreadsContent);
+        const singleThreadsTitleLine=createShowInfoLine("title:  ",singleThreadsTitle);
+
+        singleDetail.appendChild(singleThreadsTitleLine);
+        singleDetail.appendChild(singleThreadsContentLine);
+        singleDetail.appendChild(singleThreadsLikesLine);
         page.appendChild(singleDetail);
         //2.4.1 1.check current threads already exist comment
         getCommentDetail(id)
@@ -686,18 +706,24 @@ const showUserDetail=(comment)=>{
     console.log("click user img react");
     getUserDetail(comment.creatorId)
     .then((userDetail)=>{
-        const userEmail=document.createElement("li");
-        const userName=document.createElement("li");
-        const userImage=document.createElement("li");
-        const userAdmin=document.createElement("li");
+        const userEmail=document.createElement("div");
+        const userName=document.createElement("div");
+        const userImage=document.createElement("div");
+        const userAdmin=document.createElement("div");
         userEmail.innerText=userDetail.email;
         userName.innerText=userDetail.name;
         userImage.innerText=userDetail.image;
         userAdmin.innerText=userDetail.admin;
-        page.appendChild(userEmail);
-        page.appendChild(userName);
-        page.appendChild(userImage);
-        page.appendChild(userAdmin);
+
+        const userEmailLine=createShowInfoLine("Email: ",userEmail);
+        const userNameLine=createShowInfoLine("Name: ",userName);
+        const userImageLine=createShowInfoLine("Image: ",userImage);
+        const userAdminLine=createShowInfoLine("IsAdmin: ",userAdmin);
+
+        page.appendChild(userEmailLine);
+        page.appendChild(userNameLine);
+        page.appendChild(userImageLine);
+        page.appendChild(userAdminLine);
         const backToThread=createButton("Back","backToThreadButton",()=>backToThreadCallback(comment));
         page.appendChild(showAllUserThreads(comment.creatorId));
         page.appendChild(backToThread);
@@ -791,7 +817,7 @@ const createEditCommentPage=(comment)=>{
     page.setAttribute("id",`edit-${comment.id}-comment-page`);
     // a innertext, a Submit-Your-Comment
     const editCommentInput=createLine("Edit Comment Input: ",`edit-${comment.id}-comment-input`,"text",comment.content);
-    const editUpdateButton=createButton("comment",`edit-${comment.id}-comment-submit`,()=>editCommentSubmit(comment));
+    const editUpdateButton=createButton("edit",`edit-${comment.id}-comment-submit`,()=>editCommentSubmit(comment));
     page.appendChild(editCommentInput);
     page.appendChild(editUpdateButton);
     return page;
@@ -833,6 +859,7 @@ const createReplyCallbcak=(comment)=>{
         //---------------------------------------------------------------------after success create comment, remove current page and display commments--()
         removeElement("singleThreadsDetails");
         const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
         main.appendChild(showSingleThreads(comment.threadId));
     })
 }
@@ -860,6 +887,7 @@ const createCommentCallbcak=(ThreadId,parentCommentId=null)=>{
         //after success create comment, remove current page and display commments--()
         removeElement("singleThreadsDetails");
         const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
         main.appendChild(showSingleThreads(ThreadId));
     })
 }
