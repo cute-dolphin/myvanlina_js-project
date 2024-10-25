@@ -639,8 +639,10 @@ const watchThreadCallback=(id)=>{
 //show page still need time display and order by time
 const showCommentPage=(comment)=>{
     const commentList=document.createElement("ul");
+    //sort comment by create time
+    const sortedComment = sortCommentsDescending(comment);
     //the first turn, show all of the comment under this threads
-    comment.forEach(comment=>{
+    sortedComment.forEach(comment=>{
         const singleComment=showSingleComment(comment);
         //---------------------------------------------------------there is single comment id---------------------------------------------------------
         singleComment.id=`comment-${comment.id}`
@@ -692,9 +694,12 @@ const showSingleComment=(comment)=>{
     }
 
     const commentContent=document.createElement("div");
+    const commentTime = document.createElement("div");
     commentContent.innerText=comment.content;
+    commentTime.innerText=formatTimeSince(comment.createdAt);
     singleComment.appendChild(profileImage);
     singleComment.appendChild(commentContent);
+    singleComment.appendChild(commentTime);
     singleComment.appendChild(replyComment);
     singleComment.appendChild(editCommentButton);
     singleComment.appendChild(likeButton);
@@ -943,6 +948,10 @@ const formatTimeSince=(commentTime)=> {
     }
 }
 
+// Function to sort comments in reverse chronological order
+const sortCommentsDescending=(comments)=> {
+    return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}
 //problem need to check--1. page fresh 2 comment time 3 order by time
 
 //------main thread------
