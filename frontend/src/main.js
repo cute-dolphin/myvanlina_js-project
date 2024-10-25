@@ -145,6 +145,7 @@ const logoutCallback=()=>{
     removeElement("showThreads");
     removeElement("singleThreadsDetails");
     removeElement("edit-thread-page");
+    removeElement("currentUserDetailPage");
     localStorage.clear();
     const main=document.getElementById("main");
     main.appendChild(createLoginForm());
@@ -285,6 +286,7 @@ const createthreadCallback=()=>{
     const main=document.getElementById("main");
     removeElement("showThreads");
     removeElement("singleThreadsDetails");
+    removeElement("currentUserDetailPage");
     main.appendChild(createThreadPage());
     window.history.pushState({ page: "createThread" }, "Create Thread", "/create-thread");
 }
