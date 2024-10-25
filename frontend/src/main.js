@@ -25,6 +25,16 @@ const createLine=(content,id,type,value="")=>{
     return div1;
 }
 
+//create a line, use to show information      label:information
+const createShowInfoLine=(content,element)=>{
+    const div1=document.createElement("div");
+    const label=document.createElement("label");
+    label.innerText=content;
+    div1.appendChild(label);
+    div1.appendChild(element);
+    return div1;
+}
+
 //create a button, and add relative eventlisener
 const createButton=(content,id,callback)=>{
     const button=document.createElement("button");
@@ -131,6 +141,7 @@ const logoutCallback=()=>{
     console.log("this is logout callback function");
     removeElement("headerButtons");
     removeElement("showThreads");
+    removeElement("singleThreadsDetails");
     localStorage.clear();
     const main=document.getElementById("main");
     main.appendChild(createLoginForm());
@@ -262,6 +273,8 @@ const createthreadCallback=()=>{
     const header = document.getElementById("header");
     header.style.display = "none";
     const main=document.getElementById("main");
+    removeElement("showThreads");
+    removeElement("singleThreadsDetails");
     main.appendChild(createThreadPage());
     window.history.pushState({ page: "createThread" }, "Create Thread", "/create-thread");
 }
@@ -296,6 +309,9 @@ const submitCreateNewThreadCallback=()=>{
         removeElement("create-thread-form");
         const header=document.getElementById("header");
         header.style.display = "block";
+        const main=document.getElementById("main");
+        main.appendChild(showAllThreads());
+        main.appendChild(showSingleThreads(res.id));
     })
 }
 
@@ -325,6 +341,7 @@ const showAllThreads=()=>{
         //if threads.length=5, means their may have more threads ,add a more button
         if(threads.length===5){
             const moreButton=createButton("More","moreThreadsButton",()=>{
+                removeElement("singleThreadsDetails");
                 start=start+5;
                 const main=document.getElementById("main");
                 main.appendChild(showAllThreads())
