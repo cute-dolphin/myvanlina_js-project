@@ -388,8 +388,13 @@ const showThreadsDetails=(thread)=>{
         const commentsNumber=comments.length;
         singleThreadsComments.innerText=commentsNumber;
     })
-
-    singleThreadsAuthor.innerText=thread.creatorId;
+    getUserDetail(thread.creatorId)
+    .then((res)=>{
+        const threadCreatorName=res.name;
+        console.log(threadCreatorName)
+        singleThreadsAuthor.innerText=threadCreatorName;
+    })
+    
     singleThreadsLikes.innerText=thread.likes.length;
     singleThreadsDate.innerText=formatDate(thread.createdAt);
     singleThreadsTitle.innerText=thread.title;
