@@ -707,11 +707,14 @@ const showSingleComment=(comment)=>{
 
     const commentContent=document.createElement("div");
     const commentTime = document.createElement("div");
+    const commentLikes=document.createElement("div");
     commentContent.innerText=comment.content;
     commentTime.innerText=formatTimeSince(comment.createdAt);
+    commentLikes.innerText=comment.likes.length;
     singleComment.appendChild(profileImage);
     singleComment.appendChild(commentContent);
     singleComment.appendChild(commentTime);
+    singleComment.appendChild(commentLikes);
     singleComment.appendChild(replyComment);
     singleComment.appendChild(editCommentButton);
     singleComment.appendChild(likeButton);
