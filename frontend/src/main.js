@@ -915,6 +915,34 @@ const formatDate=(datestr)=>{
     return new Intl.DateTimeFormat('default',option).format(date);
 }
 
+// Function to format time since the comment was made
+const formatTimeSince=(commentTime)=> {
+    const now = new Date();
+    const commentDate = new Date(commentTime);
+    const timeDiff = now - commentDate; // Difference in milliseconds
+
+    const minute = 60 * 1000;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    const week = 7 * day;
+
+    if (timeDiff < minute) {
+        return "Just now";
+    } else if (timeDiff < hour) {
+        const minutes = Math.floor(timeDiff / minute);
+        return `${minutes} minute(s) ago`;
+    } else if (timeDiff < day) {
+        const hours = Math.floor(timeDiff / hour);
+        return `${hours} hour(s) ago`;
+    } else if (timeDiff < week) {
+        const days = Math.floor(timeDiff / day);
+        return `${days} day(s) ago`;
+    } else {
+        const weeks = Math.floor(timeDiff / week);
+        return `${weeks} week(s) ago`;
+    }
+}
+
 //problem need to check--1. page fresh 2 comment time 3 order by time
 
 //------main thread------
