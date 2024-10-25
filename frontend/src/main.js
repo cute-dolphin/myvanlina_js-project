@@ -177,6 +177,10 @@ const lookProfileCallback=()=>{
 
 //createCurrentUserDetailPage
 const createCurrentUserDetailPage=()=>{
+    const alreadyexist=document.getElementById("currentUserDetailPage");
+    if(alreadyexist){
+        removeElement("currentUserDetailPage");
+    }
     const userId=parseInt(localStorage.getItem(AUTH.USER_ID_key));
     const page=document.createElement("ul");
     page.setAttribute("id","currentUserDetailPage");
@@ -267,6 +271,8 @@ const submitEditUserInfoCallback=()=>{
 //backToThreadPageCallback
 const backToThreadPageCallback=()=>{
     removeElement("currentUserDetailPage");
+    removeElement("userDetailPage");
+    removeElement("singleThreadsDetails");
     const main=document.getElementById("main");
     main.appendChild(showAllThreads());
 }
@@ -375,7 +381,7 @@ const showAllThreads=()=>{
     return showThreads;
 }
 
-//2.2.2.2 show threads details-------these detail in threadsList
+//2.2.2.2 show threads details-------these detail in threadsList 
 const showThreadsDetails=(thread)=>{
     const singleThreads = document.createElement("ul");
     const singleThreadsAuthor = document.createElement("div");
@@ -720,6 +726,10 @@ const showSingleComment=(comment)=>{
 }
 
 const showUserDetail=(comment)=>{
+    const alreadyexist=document.getElementById("userDetailPage");
+    if(alreadyexist){
+        removeElement("userDetailPage");
+    }
     const page=document.createElement("ul");
     page.setAttribute("id","userDetailPage");
     console.log("click user img react");
