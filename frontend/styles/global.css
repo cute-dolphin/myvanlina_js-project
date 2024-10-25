@@ -101,3 +101,25 @@ button {
     font-size: 1rem;
     transition: background-color 0.3s ease;
 }
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.create-thread-form {
+    margin: 20px;
+}
+
+#headerButtons {
+    display: flex;
+    gap: 10px;
+}
+
+#showThreads {
+    width: 400px;
+    overflow-y: auto;
+}
+
+li {
+    margin-bottom: 15px;
+}
